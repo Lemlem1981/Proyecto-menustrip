@@ -9,6 +9,7 @@ public partial class FrmClientes : Form
         Label lbl = new Label();
         lbl.Text = "holaaa";
         lbl.AutoSize = true;
+        lbl.Location = new Point(300,300);
         Controls.Add(lbl);
     }
 }
