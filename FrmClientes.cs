@@ -60,8 +60,16 @@ public partial class FrmClientes : Form
 
         DataGridView dtClientes = new DataGridView();
         dtClientes.Size = new Size(300,300);
-        dtClientes.Location = new Point(400,50);
+        dtClientes.Location = new Point(400,60);
 
+        TextBox txtBuscar = new TextBox();
+        txtBuscar.Width = txtBoxWidth;
+        txtBuscar.Location = new Point(400,30);
+
+        Button btnBuscar = new Button();
+        btnBuscar.Location = new Point(670,30);
+        btnBuscar.Size = new Size(20,20);
+        btnBuscar.Text = "Buscar";
 
         Controls.AddRange
         (
@@ -76,7 +84,9 @@ public partial class FrmClientes : Form
             txtCorreo,
             lblDireccion,
             txtDireccion,
-            dtClientes
+            dtClientes,
+            txtBuscar,
+            btnBuscar
         );
     }
 }

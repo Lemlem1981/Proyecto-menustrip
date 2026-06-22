@@ -22,6 +22,10 @@ public partial class Form1 : Form
             AbriFormulario(new FrmClientes());
         };
         ToolStripMenuItem productos = new ToolStripMenuItem("Productos");
+        productos.Click += (s,e) => 
+        {
+            AbriFormulario(new FrmProductos());
+        };
         ToolStripMenuItem empleados = new ToolStripMenuItem("Empleados");
 
         menuStrip.Items.AddRange(inicio,clientes,productos,empleados);
