@@ -7,9 +7,9 @@ C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\ne
 C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\Proyecto menustrip.AssemblyInfoInputs.cache
 C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\Proyecto menustrip.AssemblyInfo.cs
 C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\Proyecto menustrip.csproj.CoreCompileInputs.cache
+C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\Proyecto menustrip.sourcelink.json
 C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\Proyecto menustrip.dll
 C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\refint\Proyecto menustrip.dll
 C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\Proyecto menustrip.pdb
 C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\Proyecto menustrip.genruntimeconfig.cache
 C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\ref\Proyecto menustrip.dll
-C:\Users\MI PC\Desktop\Apps\C#\Entornos visuales\Proyecto menustrip\obj\Debug\net10.0-windows\Proyecto menustrip.sourcelink.json
