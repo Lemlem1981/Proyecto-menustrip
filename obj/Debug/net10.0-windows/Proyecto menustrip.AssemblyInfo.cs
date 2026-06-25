@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Proyecto menustrip")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0eab4d02d40f2c7b0ba1424c5b18aa59be97a5ff")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0e6ca2b01a5ba836e846f936e21bf23f7aed0252")]
 [assembly: System.Reflection.AssemblyProductAttribute("Proyecto menustrip")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Proyecto menustrip")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

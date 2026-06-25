@@ -1,4 +1,5 @@
 using System.Drawing.Text;
+using MySqlConnector;
 
 namespace Proyecto_menustrip;
 
@@ -19,20 +20,20 @@ public partial class Form1 : Form
         ToolStripMenuItem clientes = new ToolStripMenuItem("Clientes");
         clientes.Click += (s,e) => 
         {
-            AbriFormulario(new FrmClientes());
+            AbrirFormulario(new FrmClientes());
         };
         ToolStripMenuItem productos = new ToolStripMenuItem("Productos");
         productos.Click += (s,e) => 
         {
-            AbriFormulario(new FrmProductos());
+            AbrirFormulario(new FrmProductos());
         };
         ToolStripMenuItem empleados = new ToolStripMenuItem("Empleados");
 
         menuStrip.Items.AddRange(inicio,clientes,productos,empleados);
 
     }
-    private Form? formularioActivo = null;
-    private void AbriFormulario(Form form)
+    private Form? formularioActivo;
+    private void AbrirFormulario(Form form)
     {
         if(formularioActivo != null)
         formularioActivo.Close();
@@ -40,6 +41,7 @@ public partial class Form1 : Form
         formularioActivo = form;
         form.TopLevel = false;
         form.Dock = DockStyle.Fill;
+        form.FormBorderStyle = FormBorderStyle.None;
 
         mainPanel.Controls.Clear();
         mainPanel.Controls.Add(form);

@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Ju9rZo/E7kc=",
+  "dgSpecHash": "zX7vKSw3O+M=",
   "success": true,
   "projectFilePath": "C:\\Users\\MI PC\\Desktop\\Apps\\C#\\Entornos visuales\\Proyecto menustrip\\Proyecto menustrip.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\MI PC\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\MI PC\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\MI PC\\.nuget\\packages\\mysqlconnector\\2.6.0\\mysqlconnector.2.6.0.nupkg.sha512"
+  ],
   "logs": []
 }
