@@ -1,15 +1,20 @@
 using System.Data;
 using System.Data.Common;
 using System.Net.NetworkInformation;
+using Microsoft.VisualBasic;
 using MySqlConnector;
 
 namespace Proyecto_menustrip;
 
 public partial class FrmClientes : Form
 {
-    MySqlConnection? connection;
+    private bool nombreValido = false, telefonoValido = false;
+    private MySqlConnection? connection;
+    private DataGridView dtClientes;
+    private TextBox txtIdCliente, txtNombreCliente, txtTelefono, txtCorreo, txtDireccion;
     public FrmClientes()
     {
+        // CargarClientes();
         int txtBoxWidth = 300;
 
         Panel datosCliente = new Panel();
@@ -46,7 +51,7 @@ public partial class FrmClientes : Form
         lblIdCliente.Text = "ID del cliente";
         lblIdCliente.Location = new Point(0,30);
 
-        TextBox txtIdCliente = new TextBox();
+        txtIdCliente = new TextBox();
         txtIdCliente.Width = txtBoxWidth;
         txtIdCliente.Location = new Point(0,50);
         txtIdCliente.Enabled = false;
@@ -62,17 +67,27 @@ public partial class FrmClientes : Form
         lblNombreAdv.ForeColor = Color.Red;
         lblNombreAdv.Location = new Point(lblNombreCliente.Location.X+lblNombreCliente.PreferredWidth,lblNombreCliente.Location.Y);
 
-        TextBox txtNombreCliente = new TextBox();
+        txtNombreCliente = new TextBox();
         txtNombreCliente.Width = txtBoxWidth;
         txtNombreCliente.Location = new Point(0,100);
         txtNombreCliente.TextChanged += (s,e) =>
         {
-            if(txtNombreCliente.Text == string.Empty)
-            lblNombreAdv.Text = "Obligatorio";
-            else if(txtNombreCliente.TextLength < 3)
-            lblNombreAdv.Text = "Debe contener almenos 3 caracteres";
+            string nombre = txtNombreCliente.Text.Trim();
+            if(nombre.Length == 0)
+            {
+                lblNombreAdv.Text = "Obligatorio";
+                nombreValido = false;
+            }
+            else if(nombre.Length < 3)
+            {
+                lblNombreAdv.Text = "Debe contener almenos 3 caracteres";
+                nombreValido = false;
+            }
             else
-            lblNombreAdv.Text = string.Empty;
+            {
+                lblNombreAdv.Text = string.Empty;
+                nombreValido = true;
+            }
         };
 
         Label lblTelefono = new Label();
@@ -85,9 +100,27 @@ public partial class FrmClientes : Form
         lblTelefonoAdv.ForeColor = Color.Red;
         lblTelefonoAdv.Location = new Point(lblTelefono.Location.X+lblTelefono.PreferredWidth,lblTelefono.Location.Y);
 
-        TextBox txtTelefono = new TextBox();
+        txtTelefono = new TextBox();
         txtTelefono.Width = txtBoxWidth;
         txtTelefono.Location = new Point(0,150);
+        txtTelefono.TextChanged += (s,e) =>
+        {
+            if(txtTelefono.Text.Any(c => !char.IsDigit(c)))
+            {
+                lblTelefonoAdv.Text = "Solo se permiten numeros (0-9)";
+                telefonoValido = false;
+            }
+            else if(txtTelefono.TextLength != 8)
+            {
+                lblTelefonoAdv.Text = "(Formato: xxxxxxxx)";
+                telefonoValido = false;
+            }
+            else
+            {
+                lblTelefonoAdv.Text = string.Empty;
+                telefonoValido = true;
+            }
+        };
 
         Label lblCorreo = new Label();
         lblCorreo.AutoSize = true;
@@ -99,7 +132,7 @@ public partial class FrmClientes : Form
         lblCorreoAdv.ForeColor = Color.Red;
         lblCorreoAdv.Location = new Point(lblCorreo.Location.X+lblCorreo.PreferredWidth,lblCorreo.Location.Y);
 
-        TextBox txtCorreo = new TextBox();
+        txtCorreo = new TextBox();
         txtCorreo.Width = txtBoxWidth;
         txtCorreo.Location = new Point(0,200);
 
@@ -108,22 +141,42 @@ public partial class FrmClientes : Form
         lblDireccion.Text = "Direccion";
         lblDireccion.Location = new Point(0,230);
 
-        TextBox txtDireccion = new TextBox();
+        txtDireccion = new TextBox();
         txtDireccion.Width = txtBoxWidth;
         txtDireccion.Location = new Point(0,250);
 
-        DataGridView dtClientes = new DataGridView();
+        dtClientes = new DataGridView();
         dtClientes.Size = new Size(400,300);
         dtClientes.Location = new Point(0,30);
-
+        dtClientes.DoubleClick += (s,e) =>
+		{
+			try
+			{
+        		txtIdCliente?.Text = dtClientes.CurrentRow?.Cells["id"].Value?.ToString();
+        		txtNombreCliente?.Text = dtClientes.CurrentRow?.Cells["nombre"].Value?.ToString();
+        		txtTelefono?.Text = dtClientes.CurrentRow?.Cells["telefono"].Value?.ToString();
+        		txtCorreo?.Text = dtClientes.CurrentRow?.Cells["correo"].Value?.ToString();
+        		txtDireccion?.Text = dtClientes.CurrentRow?.Cells["direccion"].Value?.ToString();
+			}
+			catch
+			{
+				txtIdCliente.Clear();
+                txtNombreCliente.Clear();
+                txtTelefono.Clear();
+                txtCorreo.Clear();
+                txtDireccion.Clear();
+			}
+        };
         Button btnBuscar = new Button();
         btnBuscar.AutoSize = true;
         btnBuscar.Text = "Buscar";
+        btnBuscar.Click += (s,e) => CargarClientes();
 
         TextBox txtBuscar = new TextBox();
         txtBuscar.Width = dtClientes.Width-btnBuscar.PreferredSize.Width;
         btnBuscar.Location = new Point(txtBuscar.Width,0);
         txtBuscar.Location = new Point(0,0);
+        txtBuscar.TextChanged += (s,e) => CargarClientes(txtBuscar.Text);
 
         Button btnGuardar = new Button();
         btnGuardar.Location = new Point(0,290);
@@ -132,28 +185,7 @@ public partial class FrmClientes : Form
         btnGuardar.ForeColor = Color.White;
         btnGuardar.BackColor = Color.Green;
         btnGuardar.Size = new Size(80,30);
-        btnGuardar.Click += (s,e) =>
-        {
-            try
-            {
-                // connection = SqlConnect.miConexion();
-                // connection.Open();
-
-                // MySqlDataAdapter adapter = new MySqlDataAdapter();
-                // DataTable dt = new DataTable();
-
-                // adapter.SelectCommand?.Parameters.AddWithValue($"@buscar", "%hola%");
-                // adapter.Fill(dt);
-
-                // dtClientes.DataSource = dt;
-
-                // connection.Close();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-        };
+        btnGuardar.Click += (s,e) => GuardarDatos();
 
         Button btnEditar = new Button();
         btnEditar.Location = new Point(85,290);
@@ -162,6 +194,7 @@ public partial class FrmClientes : Form
         btnEditar.ForeColor = Color.White;
         btnEditar.BackColor = Color.Orange;
         btnEditar.Size = new Size(80,30);
+        btnEditar.Click += (s,e) => ModificarDatos();  
 
         Button btnEliminar = new Button();
         btnEliminar.Location = new Point(170,290);
@@ -170,6 +203,7 @@ public partial class FrmClientes : Form
         btnEliminar.ForeColor = Color.White;
         btnEliminar.BackColor = Color.Red;
         btnEliminar.Size = new Size(80,30);
+        btnEliminar.Click += (s,e) => EliminarDatos();
 
         datosCliente.Controls.AddRange(
             lblDatosCliente,
@@ -195,5 +229,156 @@ public partial class FrmClientes : Form
             txtBuscar,
             btnBuscar
         );
+
+        CargarClientes();
+        renombrarHeader("id","ID");
+        renombrarHeader("nombre","Nombre");
+        renombrarHeader("telefono","Numero Telefonico");
+        renombrarHeader("correo","Correo Electronico");
+        renombrarHeader("direccion","Direccion");
     }
+    private void CargarClientes(string buscar = "")
+    {
+        try
+        {
+            using(MySqlConnection conexion = SqlConnect.MiConexion())
+            {
+                conexion.Open();
+
+                MySqlCommand cmd = new MySqlCommand(
+                    "SELECT * FROM clientes WHERE nombre LIKE @buscar",
+                    conexion
+                );
+
+                cmd.Parameters.AddWithValue("@buscar", "%" + buscar + "%");
+
+                MySqlDataAdapter adaptador = new MySqlDataAdapter(cmd);
+
+                DataTable dt = new DataTable();
+
+                adaptador.Fill(dt);
+
+                dtClientes.DataSource = dt;
+            }
+        }   
+        catch(Exception ex)
+        {
+            MessageBox.Show(ex.Message,"Error");
+        }
+    }
+    private void GuardarDatos()
+    {
+        try
+        {
+            if(nombreValido && telefonoValido)
+            using(MySqlConnection conexion = SqlConnect.MiConexion())
+            {
+                conexion.Open();
+
+                string consulta = " INSERT INTO clientes(nombre, telefono, correo, direccion)" + 
+                    "VALUES(@nombre, @telefono, @correo, @direccion)";
+                using(MySqlCommand cmd = new MySqlCommand(consulta, conexion))
+                {
+                    cmd.Parameters.AddWithValue("@nombre",txtNombreCliente.Text);
+                    cmd.Parameters.AddWithValue("@telefono",txtTelefono.Text);
+                    cmd.Parameters.AddWithValue("@correo",txtCorreo.Text);
+                    cmd.Parameters.AddWithValue("@direccion",txtDireccion.Text);
+                    
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if(rowsAffected > 0)
+                    {
+                        MessageBox.Show("Cliente guardado exitosamente");
+                        txtNombreCliente.Clear();
+                        txtCorreo.Clear();
+                        txtTelefono.Clear();
+                        txtDireccion.Clear();
+                        CargarClientes();
+                    }
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+            MessageBox.Show(ex.Message,"Error");
+        }
+    }
+    private void renombrarHeader(string nombreOriginal, string nombreNuevo)
+    {
+        if (dtClientes.Columns.Contains(nombreOriginal))
+        	dtClientes.Columns[nombreOriginal]?.HeaderText = nombreNuevo;
+    }
+    private void EliminarDatos()
+    {
+        int idSeleccion = Convert.ToInt32(dtClientes.CurrentRow?.Cells["id"].Value);
+        string? nmbSeleccion = Convert.ToString(dtClientes.CurrentRow?.Cells["nombre"].Value);
+
+        using(MySqlConnection conexion = SqlConnect.MiConexion())
+        {
+            conexion.Open();
+            if(MessageBox.Show($"Desea eliminar: \"{nmbSeleccion}\"?", "ELiminar", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                MySqlCommand cmd = new MySqlCommand
+                (
+                    "DELETE FROM clientes WHERE id = @id",
+                    conexion
+                );
+                cmd.Parameters.AddWithValue("@id", idSeleccion);
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+    private void ModificarDatos()
+    {
+        string? nmbSeleccion = Convert.ToString(dtClientes.CurrentRow?.Cells["nombre"].Value);
+        
+        if(nombreValido && telefonoValido)
+        using(MySqlConnection conexion = SqlConnect.MiConexion())
+        {
+            conexion.Open();
+            if(MessageBox.Show($"Desea modificar: \"{nmbSeleccion}\"?", "Modificar", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                MySqlCommand cmd = new MySqlCommand
+                (
+                    "UPDATE clientes SET nombre=@n, telefono=@t, correo=@c, direccion=@d WHERE id=@id",
+                    conexion
+                );
+                cmd.Parameters.AddWithValue("@n", txtNombreCliente.Text);
+                cmd.Parameters.AddWithValue("@t", txtTelefono.Text);
+                cmd.Parameters.AddWithValue("@c", txtCorreo.Text);
+                cmd.Parameters.AddWithValue("@d", txtDireccion.Text);
+                cmd.Parameters.AddWithValue("@id", txtIdCliente.Text);
+                cmd.ExecuteNonQuery();
+            }
+            CargarClientes();
+        }
+    }
+    // private void Buscar(string buscar = "")
+    // {
+    //     try
+    //     {
+    //         using(MySqlConnection conexion = SqlConnect.MiConexion())
+    //         {
+    //             conexion.Open();
+
+    //             MySqlCommand cmd = new MySqlCommand(
+    //                 "SELECT * FROM clientes WHERE nombre LIKE @buscar",
+    //                 conexion
+    //             );
+
+    //             cmd.Parameters.AddWithValue("@buscar", "%" + buscar + "%");
+
+    //             MySqlDataAdapter adaptador = new MySqlDataAdapter(cmd);
+
+    //             DataTable dt = new DataTable();
+
+    //             adaptador.Fill(dt);
+
+    //             dtClientes.DataSource = dt;
+    //         }
+    //     }   
+    //     catch(Exception ex)
+    //     {
+    //         MessageBox.Show(ex.Message,"Error");
+    //     }
+    // }
 }
